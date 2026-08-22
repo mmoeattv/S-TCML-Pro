@@ -5,22 +5,32 @@
     "glazing facade orientation",
     "WWR",
     "outdoor mean raad temp",
-    "hour of the year"
+    "hour of the year",
+    "hour_of_day",
+    "day_of_year"
   ],
   "orientation_codes": {
     "0": "North",
     "90": "East",
     "180": "South",
-    "270": "West",
-    "note": "confirmed from the raw per-orientation hourly files"
+    "270": "West"
   },
-  "hour_of_year": "0-8759 (0-indexed), raw hour-of-year column, not calendar hour-of-day",
+  "hour_of_year": "0-8759 (0-indexed) raw hour-of-year column",
+  "hour_of_day": "DERIVED: hour_of_year % 24  (0-23). Computed inside predict.py; the caller does not supply it.",
+  "day_of_year": "DERIVED: hour_of_year // 24 (0-364). Computed inside predict.py; the caller does not supply it.",
+  "version": "v2 - calendar-decomposed features, re-tuned depth",
+  "changes_from_v1": "added hour_of_day and day_of_year (both derived from hour_of_year, no new information required from the user) and re-tuned max_depth with GroupKFold; v1 was capped at max_depth=11 by its search grid.",
+  "max_depth_per_target": {
+    "PMV": 11,
+    "Cooling": 11,
+    "Heating": 11
+  },
   "targets": {
     "PMV": "unitless",
-    "Cooling": "kWh (hourly cooling load)",
-    "Heating": "kWh (hourly heating load)"
+    "Cooling": "kWh (hourly)",
+    "Heating": "kWh (hourly)"
   },
   "PPD": "derived from predicted PMV via ISO 7730, not a model",
-  "interval": "90% conformal: lower=q_lo.predict(x)-Q, upper=q_hi.predict(x)+Q (Q per target in conformal.json)",
-  "note_vs_monthly": "hourly mode has NO month feature (dropped by design decision); outdoor temp column here is 'outdoor mean raad temp' in the raw files (confirmed to be outdoor dry-bulb temp, a naming typo in the source data)."
+  "interval": "90% conformal: lower=q_lo.predict(x)-Q, upper=q_hi.predict(x)+Q",
+  "GUI_IMPACT": "NONE. predict() keeps the same signature; hour_of_day and day_of_year are derived internally from hour_of_year, so app.py and the user-facing interface need no change."
 }

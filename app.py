@@ -43,7 +43,7 @@ MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 VALID_RANGE = {"hourly": (5.1, 43.9), "monthly": (12.9, 27.4)}
 
 ACCURACY = {
-    "hourly":  {"PMV": "0.862",  "Cooling": "0.824",  "Heating": "0.875",  "PPD": "0.752"},
+    "hourly":  {"PMV": "0.9974", "Cooling": "0.9917", "Heating": "0.9974", "PPD": "0.9944"},
     "monthly": {"PMV": "0.9998", "Cooling": "0.9948", "Heating": "0.9996", "PPD": "0.9990"},
 }
 

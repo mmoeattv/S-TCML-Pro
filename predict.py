@@ -8,6 +8,7 @@ Requires: xgboost, numpy.
 Two modes, selected via `predict(mode=...)`:
   mode="monthly": month, exterior wall width, room depth, glazing facade orientation, WWR, outdoor temp
   mode="hourly":  exterior wall width, room depth, glazing facade orientation, WWR, outdoor temp, hour of year
+                  (hour-of-day and day-of-year are derived internally from hour of year - v2)
 
 Returns point predictions + 90% conformal prediction intervals for PMV,
 cooling load and heating load, and PPD derived from PMV via ISO 7730.
@@ -23,8 +24,12 @@ TARGETS = ["PMV", "Cooling", "Heating"]
 
 MONTHLY_FEATURES = ["month", "exterior wall width", "room depth",
                      "glazing facade orientation", "WWR", "outdoor temp"]
+# v2: hour_of_day and day_of_year appended at the END. Both are DERIVED inside predict()
+# from hour_of_year, so predict()'s signature is unchanged and app.py needs no edit.
+# ORDER IS CONTRACTUAL - XGBoost indexes features by position, not by name.
 HOURLY_FEATURES = ["exterior wall width", "room depth",
-                    "glazing facade orientation", "WWR", "outdoor temp", "hour of year"]
+                    "glazing facade orientation", "WWR", "outdoor temp", "hour of year",
+                    "hour_of_day", "day_of_year"]
 
 
 def _load(dir_, fname):
@@ -114,7 +119,14 @@ def predict(mode, exterior_wall_width, room_depth, orientation, wwr, outdoor_tem
     elif mode == "hourly":
         if hour_of_year is None:
             raise ValueError("mode='hourly' requires hour_of_year (0-8759)")
-        x = np.array([[exterior_wall_width, room_depth, orientation, wwr, outdoor_temp, hour_of_year]], dtype=float)
+        hoy = int(hour_of_year)
+        if not 0 <= hoy <= 8759:
+            raise ValueError(f"hour_of_year must be 0-8759, got {hoy}")
+        # ---- v2 change: un-combine the hour the GUI already built from month/day/hour ----
+        hour_of_day = hoy % 24     # 0-23
+        day_of_year = hoy // 24    # 0-364
+        x = np.array([[exterior_wall_width, room_depth, orientation, wwr, outdoor_temp,
+                       hoy, hour_of_day, day_of_year]], dtype=float)
         return _predict_common(x, _H_POINT, _H_QLO, _H_QHI, _H_CONF)
     else:
         raise ValueError("mode must be 'monthly' or 'hourly'")
