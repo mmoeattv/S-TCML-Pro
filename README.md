@@ -1,4 +1,4 @@
-# S-TCML2 — Dual-Resolution Thermal Comfort + Load Surrogate Dashboard
+# S-TCML PRO — Dual-Resolution Thermal Comfort + Load Surrogate Dashboard
 
 Streamlit GUI for a pre-trained XGBoost surrogate (PMV, PPD, cooling load, heating load) for a
 West Cairo single-office case, at monthly or hourly resolution. Companion to the published paper:
