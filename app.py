@@ -1,5 +1,5 @@
 # =============================================================================
-# S-TCML2 — Dual-Resolution Thermal Comfort + Load Surrogate Dashboard
+# S-TCMLpro — Dual-Resolution Thermal Comfort + Load Surrogate Dashboard
 # Built from design_handoff_thermal_dashboard (Dashboard.dc.html + README.md)
 # Backend: gui_package/predict.py (pre-trained XGBoost models, do not retrain)
 # Run:  streamlit run app.py   (from inside gui_package/)
@@ -100,7 +100,7 @@ def icon(name, size=16, color="currentColor", stroke_width=1.8):
             f'stroke="{color}" stroke-width="{stroke_width}" stroke-linecap="round" '
             f'stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0;">{p}</svg>')
 
-st.set_page_config(page_title="S-TCML2 · Thermal Comfort", page_icon="🌡️",
+st.set_page_config(page_title="S-TCML PRO · Thermal Comfort", page_icon="🌡️",
                     layout="wide", initial_sidebar_state="collapsed")
 
 # -----------------------------------------------------------------------------
